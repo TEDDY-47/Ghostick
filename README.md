@@ -2,7 +2,7 @@
 
 A single-page controller tester that runs in your browser. No install, no backend, no dependencies.
 
-**Live demo:** https://TEDDY-47.github.io/ghostick/
+**Live demo:** https://teddy-47.github.io/Ghostick/
 
 ## Features
 
