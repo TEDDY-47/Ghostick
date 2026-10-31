@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
-:root{--g:#8dc63f;--gl:#c4ee5f;--line:rgba(255,255,255,.75);--dim:rgba(255,255,255,.62);--warn:#ffb74d;--bad:#ff6b6b;color-scheme:dark}
+:root{--g:#8dc63f;--gl:#c4ee5f;--line:rgba(255,255,255,.75);--dim:rgba(255,255,255,.62);color-scheme:dark}
 *{box-sizing:border-box}
 html{min-height:100%;background:#1c1c1c}
 body{margin:0;min-height:100vh;color:#fff;background:linear-gradient(180deg,#5d5c5d 0,#3d3d3d 35%,#1f1f1f 100%);font:400 15px/1.4 "Segoe UI","Open Sans",system-ui,sans-serif;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px);overflow-wrap:anywhere}
@@ -21,29 +21,42 @@ main{max-width:560px;margin:0 auto;padding:18px 14px 44px;text-align:center}
 .lbl{font-size:12px;color:var(--dim);margin:6px 0 10px}
 h1{font-size:clamp(26px,8vw,36px);font-weight:300;margin:0}
 .st{font-size:15px;color:var(--dim);font-weight:300}
-.idl{font-size:11px;color:var(--dim);margin:4px 0 12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.idl{font-size:11px;color:var(--dim);margin:4px 0 4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hint{font-size:12px;color:#ffb74d;min-height:1.2em;margin-bottom:8px}
 .padwrap{display:grid;grid-template-columns:36px minmax(0,1fr) 36px;gap:6px;align-items:center}
 .tcol{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px}
 .tbar{position:relative;width:16px;height:130px;border:1.5px solid var(--line);overflow:hidden}
 .tbar i{position:absolute;left:0;right:0;bottom:0;height:0;background:var(--g)}
 .tbar.done{border-color:var(--gl);box-shadow:0 0 8px var(--g)}
 .tcol b{font-weight:400;font-size:11px;color:var(--dim)}
-svg#pad{width:100%;height:auto;display:block}
-.body{fill:#1b1b1b;stroke:#303030;stroke-width:2}
-.p{fill:#7b7e80;stroke:#262626;stroke-width:1.2;transition:filter .12s}
-.p.done{fill:#6c9a2b;stroke:var(--gl);stroke-width:2.5;filter:drop-shadow(0 0 4px var(--g))}
-.p.on{stroke:#fff;filter:brightness(1.6) drop-shadow(0 0 6px #fff)}
-.p.done+.t{fill:#0f2306}
-.thumb{fill:#3b3d3f;stroke:#1c1c1c;stroke-width:1}
-.ring{fill:none;stroke:#3a3a3a;stroke-width:1.5}
-.glyph{stroke:#fff;stroke-width:3;stroke-linecap:round;fill:none;pointer-events:none}
-.t{font-size:12px;font-weight:600;fill:#ececec;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.stage{perspective:900px;animation:ent .7s ease both}
+#tilt{transition:transform .08s linear;transform-style:preserve-3d;animation:fl 4s ease-in-out infinite}
+svg#pad{width:100%;height:auto;display:block;overflow:visible}
+.p{--c:#8dc63f;--st:rgba(255,255,255,.14);stroke:var(--st);stroke-width:2.5;transition:filter .1s,transform .1s;transform-box:fill-box;transform-origin:center}
+.p.na{opacity:.3}
+.p.done{stroke:var(--c);stroke-width:6;filter:drop-shadow(0 0 8px var(--c));animation:pu 2.4s ease-in-out infinite}
+@keyframes pu{0%,100%{filter:drop-shadow(0 0 4px var(--c))}50%{filter:drop-shadow(0 0 13px var(--c))}}
+@keyframes fl{0%,100%{translate:0 0}50%{translate:0 -6px}}
+@keyframes sh{0%,100%{translate:0 0}25%{translate:-5px 2px}50%{translate:5px -2px}75%{translate:-3px -1px}}
+@keyframes ent{from{opacity:0;transform:translateY(16px) scale(.95)}to{opacity:1;transform:none}}
+#tilt.rum{animation:sh .1s linear infinite}
+.p.on{fill:var(--c);stroke:#fff;filter:drop-shadow(0 0 18px var(--c)) brightness(1.25);transform:scale(.94);animation:none}
+.t{font-size:26px;font-weight:700;fill:#ddd;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.t.L{font-size:38px;fill:var(--c)}
+.p.on+.t{fill:#fff}
+.sy{pointer-events:none}
+.p.done+.sy{stroke:var(--c)}
+.p.on+.sy{stroke:#fff}
+.cap{pointer-events:none}
 .cnt{font-size:13px;color:var(--dim);margin:10px 0}
 .row{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
 button{font:inherit;font-weight:600;font-size:14px;color:#fff;border:1px solid var(--line);background:rgba(255,255,255,.08);border-radius:6px;padding:9px 14px;cursor:pointer;max-width:100%}
+button.sm{font-size:12px;padding:6px 10px;font-weight:400}
 button.go{background:linear-gradient(180deg,#b9de6c 0,#8dc63f 50%,#74ad25 51%,#8dc63f 100%);border-color:#4f8a12;text-shadow:0 1px 0 rgba(0,0,0,.3)}
 button:disabled{opacity:.4;cursor:default}
 #rmsg{font-size:12px;color:var(--dim);margin-top:8px;min-height:1em}
+#wiz{display:none;background:rgba(0,0,0,.55);border:1px solid var(--g);border-radius:10px;padding:10px;margin:10px 0;font-size:14px}
+#wiz b{color:var(--gl)}
 .sticks{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-top:22px}
 .sp h3{font-size:14px;font-weight:400;margin:0 0 2px}
 .xy{font-size:12px;color:var(--dim);margin-bottom:8px}
@@ -59,6 +72,20 @@ input[type=range]{flex:1;min-width:0;accent-color:var(--g)}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<radialGradient id="gx" cx=".35" cy=".25" r=".95"><stop offset="0" stop-color="#4b4b50"/><stop offset=".5" stop-color="#262629"/><stop offset="1" stop-color="#101012"/></radialGradient>
+<radialGradient id="gbk" cx=".35" cy=".3" r=".85"><stop offset="0" stop-color="#46464b"/><stop offset=".5" stop-color="#1a1a1d"/><stop offset="1" stop-color="#050506"/></radialGradient>
+<radialGradient id="gcap" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#3e3e43"/><stop offset=".6" stop-color="#1b1b1e"/><stop offset="1" stop-color="#0a0a0b"/></radialGradient>
+<linearGradient id="gdp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a4a4e"/><stop offset="1" stop-color="#18181a"/></linearGradient>
+<linearGradient id="gwh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#dfe2e8"/></linearGradient>
+<linearGradient id="gpl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26272d"/><stop offset="1" stop-color="#0b0c0f"/></linearGradient>
+<radialGradient id="g4" cx=".4" cy=".2" r=".95"><stop offset="0" stop-color="#3c3d43"/><stop offset=".55" stop-color="#1d1e22"/><stop offset="1" stop-color="#0c0d10"/></radialGradient>
+<linearGradient id="gmt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f1f1f3"/><stop offset=".5" stop-color="#9a9ba1"/><stop offset="1" stop-color="#55565b"/></linearGradient>
+<radialGradient id="gsh" cx=".4" cy=".2" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".2"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+<pattern id="gtp" width="9" height="9" patternUnits="userSpaceOnUse"><rect width="9" height="9" fill="#0a0b0d"/><circle cx="4.5" cy="4.5" r="1.7" fill="#2b2c30"/></pattern>
+<filter id="fsh" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="16"/></filter>
+<filter id="fgl" x="-30%" y="-300%" width="160%" height="700%"><feGaussianBlur stdDeviation="4"/></filter>
+</defs></svg>
 <main>
 <div class="brand">GHOSTICK</div>
 <div class="slots" id="slots"></div>
@@ -66,20 +93,26 @@ input[type=range]{flex:1;min-width:0;accent-color:var(--g)}
 <h1 id="ctitle">Controller 1</h1>
 <div class="st" id="status">(Not connected)</div>
 <div class="idl" id="pid">Connect a controller and press any button</div>
+<div class="hint" id="hint"></div>
 
 <div class="padwrap">
 <div class="tcol"><span id="lt6">LT</span><div class="tbar" id="tr6"><i id="f6"></i></div><b id="pc6">0%</b></div>
-<svg id="pad" viewBox="0 0 400 270" aria-label="Virtual controller"></svg>
+<div class="stage"><div id="tilt"><svg id="pad" viewBox="0 0 768 640" aria-label="Virtual controller"></svg></div></div>
 <div class="tcol"><span id="lt7">RT</span><div class="tbar" id="tr7"><i id="f7"></i></div><b id="pc7">0%</b></div>
 </div>
-<div class="cnt" id="cnt">0/17 tested</div>
+<div class="cnt" id="cnt">0/18 tested</div>
 <div class="row">
 <button onclick="rumble(1,0,600)">Strong rumble</button>
 <button onclick="rumble(0,1,600)">Weak rumble</button>
 <button onclick="rumble(1,1,600)">Both</button>
 <button onclick="pulse()">Pulse</button>
+<button onclick="heartbeat()">Heartbeat</button>
+<button onclick="wave()">Wave</button>
+<button onclick="sos()">SOS</button>
 </div>
 <div id="rmsg"></div>
+<div class="row" style="margin-top:8px"><button class="sm" onclick="wizStart()">Map controller</button><button class="sm" onclick="wizReset()">Reset map</button></div>
+<div id="wiz"></div>
 
 <div class="sticks">
 <div class="sp"><h3>Left Thumbstick</h3><div class="xy">X: <b id="x0">0%</b> Y: <b id="y0">0%</b></div><canvas id="c0" width="300" height="300"></canvas><div class="res" id="s0"></div></div>
@@ -94,53 +127,140 @@ input[type=range]{flex:1;min-width:0;accent-color:var(--g)}
 </main>
 <script>
 const $=id=>document.getElementById(id);
+const LS={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
 const DUR=5000,done=new Set();
-let sel=-1,lastSel=-2,testing=false,t0=0,samples=[[],[]],cur='';
+let sel=-1,lastSel=-2,testing=false,t0=0,samples=[[],[]],cur='',wz=null;
+const NAMES={xb:'Xbox',ps5:'PlayStation 5',ps4:'PlayStation 4',sw:'Switch Pro',gen:'Generic'};
+/* ---------- drawing helpers (image coordinates) ---------- */
+const C={a:'#6ccf3a',b:'#e0312b',x:'#1ea0ff',y:'#f2c200',tri:'#3ee0b0',cir:'#ff5a67',cro:'#4f9bff',sq:'#ff8ad0'};
+const pe=(i,tag,at,c,st)=>`<${tag} class="p" id="p${i}" ${at}${c||st?` style="${c?'--c:'+c+';':''}${st?'--st:'+st:''}"`:''}/>`;
+const circ=(i,x,y,r,f,c,st)=>pe(i,'circle',`cx="${x}" cy="${y}" r="${r}" fill="${f}"`,c,st);
+const rct=(i,x,y,w,h,rx,f,c,st)=>pe(i,'rect',`x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" fill="${f}"`,c,st);
+function sm(P){const n=P.length;let d='M'+P[0];for(let i=0;i<n;i++){const a=P[(i-1+n)%n],b=P[i],c=P[(i+1)%n],e=P[(i+2)%n];d+=`C${b[0]+(c[0]-a[0])/6} ${b[1]+(c[1]-a[1])/6} ${c[0]-(e[0]-b[0])/6} ${c[1]-(e[1]-b[1])/6} ${c[0]} ${c[1]}`}return d+'Z'}
+const shp=(i,P,f,c,st)=>pe(i,'path',`d="${sm(P)}" fill="${f}"`,c,st);
+const dpad=(x,y,tip,w,gap,f,st)=>rct(12,x-w/2,y-tip,w,tip-gap,w*.2,f,0,st)+rct(13,x-w/2,y+gap,w,tip-gap,w*.2,f,0,st)+rct(14,x-tip,y-w/2,tip-gap,w,w*.2,f,0,st)+rct(15,x+gap,y-w/2,tip-gap,w,w*.2,f,0,st);
+const stick=(i,k,x,y,R,ring,cap)=>circ(i,x,y,R,ring)+`<g id="t${k}" data-m="${R*.25}"><circle class="cap" cx="${x}" cy="${y}" r="${R*.8}" fill="${cap}"/><circle class="cap" cx="${x}" cy="${y}" r="${R*.55}" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="3"/><circle class="cap" cx="${x}" cy="${y}" r="${R*.3}" fill="rgba(0,0,0,.35)"/></g>`;
+function sym(t,x,y,r,col,g){const a=`class="sy" style="--c:${col}" fill="none" stroke="${g}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"`;
+  if(t==='tri')return`<path ${a} d="M${x} ${y-r} L${x+r*.95} ${y+r*.7} L${x-r*.95} ${y+r*.7}Z"/>`;
+  if(t==='sq')return`<rect ${a} x="${x-r*.8}" y="${y-r*.8}" width="${r*1.6}" height="${r*1.6}" rx="3"/>`;
+  if(t==='cir')return`<circle ${a} cx="${x}" cy="${y}" r="${r*.9}"/>`;
+  return`<path ${a} d="M${x-r*.8} ${y-r*.8}L${x+r*.8} ${y+r*.8}M${x+r*.8} ${y-r*.8}L${x-r*.8} ${y+r*.8}"/>`}
+const psf=(cx,cy,d,r,f,g,st)=>[[3,'tri',cx,cy-d],[1,'cir',cx+d,cy],[2,'sq',cx-d,cy],[0,'cro',cx,cy+d]].map(([i,t,x,y])=>circ(i,x,y,r,f,C[t],st)+sym(t,x,y,r*.5,C[t],g)).join('');
+const body=(P,f,id,sx,sy,rx,ry,sc)=>`<ellipse cx="${sx}" cy="${sy}" rx="${rx}" ry="${ry}" fill="rgba(0,0,0,.5)" filter="url(#fsh)"/><path d="${sm(P)}" fill="${f}" stroke="${sc}" stroke-width="3"/><clipPath id="${id}"><path d="${sm(P)}"/></clipPath>`;
+/* ---------- models ---------- */
+const XB=[[140,115],[200,82],[270,76],[385,86],[500,76],[570,80],[628,118],[690,200],[730,330],[735,430],[712,505],[665,550],[625,545],[590,500],[548,442],[500,418],[380,416],[255,418],[208,445],[165,500],[128,547],[92,548],[55,502],[35,420],[38,330],[80,205]];
+const S5=[[95,125],[150,108],[200,104],[290,101],[385,104],[430,108],[480,125],[525,175],[552,280],[560,370],[535,435],[495,452],[465,438],[430,385],[395,345],[360,326],[290,323],[215,326],[180,345],[145,385],[110,438],[78,452],[40,435],[15,370],[22,280],[47,175]];
+const PL5=[[188,212],[388,212],[440,290],[478,380],[498,440],[470,450],[435,395],[395,350],[362,328],[290,325],[218,328],[180,350],[140,395],[104,450],[76,440],[100,380],[140,290]];
+const S4=[[125,118],[185,95],[275,92],[390,90],[505,92],[598,95],[650,120],[695,190],[715,300],[712,400],[690,462],[650,486],[610,462],[585,405],[555,365],[520,348],[460,345],[390,343],[320,345],[262,348],[228,365],[200,405],[175,462],[135,486],[95,462],[72,400],[65,300],[85,190]];
+const S2=[[108,140],[112,95],[165,72],[222,80],[240,138],[330,146],[460,146],[560,138],[578,80],[635,72],[690,95],[695,140],[745,190],[772,300],[778,430],[745,520],[690,530],[640,498],[600,438],[560,418],[400,424],[240,418],[205,438],[170,498],[125,530],[75,520],[44,440],[48,300],[70,190]];
+const MODELS={
+ xb:{vb:'0 0 768 640',draw(k){const sw=k==='sw',L=sw?['B','A','Y','X']:['A','B','X','Y'];
+  const face=[[3,'y',562,155],[1,'b',610,203],[2,'x',515,203],[0,'a',563,247]].map(([i,c,x,y])=>{const col=sw?'#cfcfd2':C[c];return circ(i,x,y,25,'url(#gbk)',col)+`<text class="t L" x="${x}" y="${y+2}" style="--c:${col}">${L[i]}</text>`}).join('');
+  return body(XB,'url(#gx)','clx',385,590,300,26,'rgba(255,255,255,.18)')+`<ellipse cx="385" cy="150" rx="340" ry="120" fill="url(#gsh)" clip-path="url(#clx)"/>`
+  +shp(4,[[138,118],[172,88],[232,70],[272,82],[238,96],[190,112]],'url(#gbk)')+shp(5,[[628,118],[595,88],[535,70],[498,82],[532,96],[580,112]],'url(#gbk)')
+  +`<circle cx="290" cy="315" r="58" fill="#0a0a0b" stroke="rgba(255,255,255,.1)" stroke-width="3"/>`+dpad(290,315,40,26,6,'url(#gdp)')
+  +stick(10,0,200,195,50,'url(#gbk)','url(#gcap)')+stick(11,1,478,305,50,'url(#gbk)','url(#gcap)')+face
+  +circ(16,385,130,28,'#ececee',null,'#999')+`<path d="M372 117L398 143M398 117L372 143" stroke="#2b2b2d" stroke-width="7" stroke-linecap="round" fill="none" pointer-events="none"/>`
+  +circ(8,332,198,17,'url(#gbk)')+circ(9,433,198,17,'url(#gbk)')+rct(17,364,229,36,18,9,'url(#gbk)')
+  +`<path d="M425 192h16M425 198h16M425 204h16M326 193h8v8h-8zM331 198h8v8h-8zM382 241v-9M378 236l4-4 4 4" stroke="#bbb" stroke-width="2.6" fill="none" stroke-linecap="round" pointer-events="none"/>`}},
+ ps5:{vb:'0 0 574 492',draw(){const g='#8d93a0',st='#b9bdc6';
+  return body(S5,'url(#gwh)','cl5',287,478,230,18,'rgba(0,0,0,.2)')+`<path d="${sm(PL5)}" fill="url(#gpl)"/>`+`<ellipse cx="287" cy="150" rx="280" ry="110" fill="url(#gsh)" clip-path="url(#cl5)"/>`
+  +shp(4,[[92,122],[100,104],[130,96],[160,98],[165,112],[130,118]],'url(#gpl)')+shp(5,[[482,122],[474,104],[444,96],[414,98],[409,112],[444,118]],'url(#gpl)')
+  +rct(17,195,106,185,108,14,'url(#gwh)',null,st)+`<path d="M187 120L197 204M392 120L382 204" stroke="#4c7dff" stroke-width="7" stroke-linecap="round" fill="none" filter="url(#fgl)" pointer-events="none"/>`
+  +[0,1,2].map(r=>[0,1,2,3,4].map(c=>`<circle cx="${263+c*12}" cy="${226+r*9}" r="2.6" fill="#5d606a"/>`).join('')).join('')
+  +dpad(123,198,46,24,5,'url(#gwh)',st)+psf(453,197,38,24,'url(#gwh)',g,st)
+  +stick(10,0,210,268,42,'#17181c','url(#gcap)')+stick(11,1,375,268,42,'#17181c','url(#gcap)')
+  +circ(16,285,272,12,'#0d0e11')+`<text class="t" x="285" y="272" style="font-size:12px;fill:#fff">PS</text>`
+  +rct(8,158,124,14,30,7,'url(#gwh)',null,st)+rct(9,402,124,14,30,7,'url(#gwh)',null,st)}},
+ ps2:{vb:'0 0 785 591',draw(){const g='#cfd4dc';
+  return body(S2,'url(#g4)','cl2',392,566,330,20,'rgba(255,255,255,.14)')+`<ellipse cx="392" cy="170" rx="340" ry="110" fill="url(#gsh)" clip-path="url(#cl2)"/>`
+  +shp(4,[[108,140],[112,95],[165,72],[222,80],[240,138]],'url(#gdp)')+shp(5,[[695,140],[690,95],[635,72],[578,80],[560,138]],'url(#gdp)')
+  +`<circle cx="152" cy="248" r="104" fill="#121316" stroke="rgba(255,255,255,.1)" stroke-width="3"/>`+dpad(160,250,64,46,10,'url(#gdp)')
+  +`<circle cx="628" cy="248" r="122" fill="#121316" stroke="rgba(255,255,255,.1)" stroke-width="3"/>`+psf(630,250,62,30,'url(#gbk)',g)
+  +stick(10,0,282,365,78,'url(#gbk)','url(#gcap)')+stick(11,1,505,365,78,'url(#gbk)','url(#gcap)')
+  +rct(8,305,236,34,22,5,'url(#gbk)')+shp(9,[[447,236],[482,248],[447,260]],'url(#gbk)')+rct(16,380,308,44,26,4,'url(#gbk)')
+  +`<text x="397" y="198" text-anchor="middle" style="font:700 38px Georgia,serif;fill:#8c8c90;pointer-events:none">SONY</text><text x="322" y="282" style="font:12px sans-serif;fill:#aaa" text-anchor="middle">SELECT</text><text x="466" y="282" style="font:12px sans-serif;fill:#aaa" text-anchor="middle">START</text>`}},
+ ps4:{vb:'0 0 784 557',draw(){const g='#cfd4dc';
+  return body(S4,'url(#g4)','cl4',392,520,320,22,'rgba(255,255,255,.16)')+`<ellipse cx="392" cy="150" rx="340" ry="110" fill="url(#gsh)" clip-path="url(#cl4)"/>`
+  +shp(4,[[140,96],[148,76],[178,70],[205,76],[210,96]],'url(#gmt)')+shp(5,[[644,96],[636,76],[606,70],[579,76],[574,96]],'url(#gmt)')
+  +rct(17,282,94,218,124,8,'url(#gtp)')+`<rect x="288" y="108" width="206" height="6" rx="3" fill="#3a7bff" filter="url(#fgl)" pointer-events="none"/>`
+  +rct(8,240,110,24,38,10,'url(#gbk)')+rct(9,518,110,24,38,10,'url(#gbk)')
+  +`<circle cx="165" cy="195" r="64" fill="#15161a" stroke="rgba(255,255,255,.08)" stroke-width="3"/>`+dpad(165,195,42,32,6,'url(#gdp)')
+  +`<circle cx="593" cy="195" r="72" fill="#15161a" stroke="rgba(255,255,255,.08)" stroke-width="3"/>`+psf(593,195,48,26,'url(#gbk)',g)
+  +stick(10,0,285,285,58,'url(#gbk)','url(#gcap)')+stick(11,1,475,285,58,'url(#gbk)','url(#gcap)')
+  +circ(16,380,288,14,'#0d0e11')+`<text class="t" x="380" y="289" style="font-size:13px;fill:#fff">PS</text>`
+  +[0,1,2].map(r=>[0,1,2,3,4].map(c=>`<circle cx="${362+c*11}" cy="${236+r*8}" r="2.4" fill="#3a3b40"/>`).join('')).join('')}}
+};
+/* ---------- controller detection ---------- */
+function kind(id){id=id.toLowerCase();
+  if(/0ce6|0df2|dualsense/.test(id))return'ps5';
+  if(/xbox|x-box|045e|microsoft|xinput|360/.test(id))return'xb';
+  if(/054c|dualshock|playstation|sony|09cc|05c4|wireless controller/.test(id))return'ps4';
+  if(/057e|nintendo|pro controller/.test(id))return'sw';
+  return'gen'}
+function setKind(k){
+  cur=k;const m=MODELS[k==='sw'?'xb':k==='gen'?'ps2':k];
+  $('pad').setAttribute('viewBox',m.vb);$('pad').innerHTML=m.draw(k);done.clear();
+  const ps=k!=='xb'&&k!=='sw';
+  $('lt6').textContent=ps?'L2':k==='sw'?'ZL':'LT';$('lt7').textContent=ps?'R2':k==='sw'?'ZR':'RT';
+}
+/* ---------- input mapping (works with any pad) ---------- */
+const SONY_RAW={b:{0:{t:'b',i:1},1:{t:'b',i:2},2:{t:'b',i:0},3:{t:'b',i:3},4:{t:'b',i:4},5:{t:'b',i:5},6:{t:'b',i:6},7:{t:'b',i:7},8:{t:'b',i:8},9:{t:'b',i:9},10:{t:'b',i:10},11:{t:'b',i:11},12:{t:'h',i:9,d:[7,0,1]},13:{t:'h',i:9,d:[3,4,5]},14:{t:'h',i:9,d:[5,6,7]},15:{t:'h',i:9,d:[1,2,3]},16:{t:'b',i:12},17:{t:'b',i:13}},a:[{i:0,s:1},{i:1,s:1},{i:2,s:1},{i:5,s:1}]};
+function learned(p){const s=LS.get('ghostick:'+p.id);try{return s?JSON.parse(s):null}catch(e){return null}}
+function dec(sp,p){
+  if(sp.t==='b'){const b=p.buttons[sp.i];return b?b.value:0}
+  const a=p.axes[sp.i];if(a==null)return 0;
+  if(sp.t==='h'){if(a>1.2)return 0;return sp.d.includes(Math.round((a+1)*3.5)%8)?1:0}
+  if(sp.h)return Math.abs(a-sp.pk)<.12?1:0;
+  const v=(a-sp.bs)/(sp.pk-sp.bs);return v<0?0:v>1?1:v}
+const HAT=new Map();
+function readPad(p){
+  const b=Array(18).fill(0),has=Array(18).fill(false);let ax=[0,0,0,0],mode='raw',m=learned(p);
+  if(m)mode='custom';else if(p.mapping==='standard')mode='standard';else if(/054c/i.test(p.id)){m=SONY_RAW;mode='guess'}
+  if(m){for(const k in m.b){b[k]=dec(m.b[k],p);has[k]=true}ax=m.a.map((s,j)=>s?(p.axes[s.i]||0)*s.s:0);return{b,has,ax,mode}}
+  const n=p.mapping==='standard'?Math.min(18,p.buttons.length):Math.min(17,p.buttons.length);
+  for(let i=0;i<n;i++){b[i]=p.buttons[i].value;has[i]=true}
+  ax=[0,1,2,3].map(i=>p.axes[i]||0);
+  if(!HAT.has(p.id))for(let j=4;j<p.axes.length;j++)if(p.axes[j]>1.2){HAT.set(p.id,j);break}
+  const hj=HAT.get(p.id);
+  if(hj!=null){const a=p.axes[hj],k=a>1.2?-1:Math.round((a+1)*3.5)%8;[[7,0,1],[3,4,5],[5,6,7],[1,2,3]].forEach((d,j)=>{b[12+j]=d.includes(k)?1:0;has[12+j]=true})}
+  return{b,has,ax,mode}}
+/* ---------- mapping wizard ---------- */
+const NB={xb:['A','B','X','Y','LB','RB','LT','RT','View','Menu','Left stick click','Right stick click','D-pad Up','D-pad Down','D-pad Left','D-pad Right','Xbox button','Share (skip if none)'],
+ ps:['✕ Cross','○ Circle','□ Square','△ Triangle','L1','R1','L2','R2','Share / Create','Options','L3 (left stick click)','R3 (right stick click)','D-pad Up','D-pad Down','D-pad Left','D-pad Right','PS button','Touchpad click']};
+const NA=['Push LEFT stick fully RIGHT','Push LEFT stick fully DOWN','Push RIGHT stick fully RIGHT','Push RIGHT stick fully DOWN'];
+function wizLabel(i){const nb=NB[(cur==='xb'||cur==='sw')?'xb':'ps'];return i<18?'Press '+nb[i]:NA[i-18]}
+function wizStart(){if(sel<0){$('rmsg').textContent='Connect a controller first.';return}wz={i:0,base:null,wait:false,map:{b:{},a:[]}};wizShow()}
+function wizReset(){const p=getPads()[sel];if(p){LS.del('ghostick:'+p.id);done.clear();$('rmsg').textContent='Mapping reset.'}}
+function wizShow(){const w=$('wiz');if(!wz){w.style.display='none';return}w.style.display='block';
+  w.innerHTML=`Map controller ${wz.i+1}/22<br><b>${wizLabel(wz.i)}</b><div class="row" style="margin-top:8px"><button class="sm" onclick="wizNext()">Skip</button><button class="sm" onclick="wz=null;wizShow()">Cancel</button></div>`}
+function wizNext(){wz.i++;wz.base=null;wz.wait=true;if(wz.i>=22)wizFinish();else wizShow()}
+function wizFinish(){const m=wz.map;for(let j=0;j<4;j++)if(!m.a[j])m.a[j]={i:j,s:1};
+  const p=getPads()[sel];if(p)LS.set('ghostick:'+p.id,JSON.stringify(m));wz=null;done.clear();wizShow();$('rmsg').textContent='Controller mapped and saved on this device.'}
+function wizTick(p){
+  const w=wz;if(!w)return;
+  if(!w.base){w.base={b:[...p.buttons].map(x=>x.value),a:[...p.axes]};return}
+  if(w.wait){const rel=[...p.buttons].every((x,j)=>Math.abs(x.value-w.base.b[j])<.3)&&[...p.axes].every((a,j)=>Math.abs(a-w.base.a[j])<.3);if(rel)w.wait=false;else return}
+  let hit=null;
+  if(w.i<18)for(let j=0;j<p.buttons.length;j++)if(p.buttons[j].value>.6&&w.base.b[j]<.3){hit={t:'b',i:j};break}
+  if(!hit){let best=0;for(let j=0;j<p.axes.length;j++){const d=p.axes[j]-w.base.a[j];if(Math.abs(d)>.6&&Math.abs(d)>Math.abs(best)){best=d;hit={t:'a',i:j,bs:w.base.a[j],pk:p.axes[j],dir:Math.sign(d)}}}}
+  if(!hit)return;
+  if(w.i<18){w.map.b[w.i]=hit.t==='b'?hit:{t:'a',i:hit.i,bs:hit.bs,pk:hit.pk,h:Math.abs(hit.bs)>1.1}}
+  else{if(hit.t!=='a')return;w.map.a[w.i-18]={i:hit.i,s:hit.dir}}
+  wizNext()}
+/* ---------- live UI ---------- */
 const PADP='M7 3h14c3 0 5 3 6 8l1 5c.3 2-1 3-3 3-1.6 0-2.6-1-3.6-2.5L17 14H11l-1.4 1.5C8.6 17 7.6 18 6 18c-2 0-3.3-1-3-3l1-4C5 6 6 3 7 3z';
 $('slots').innerHTML=[0,1,2,3].map(i=>`<div class="slot" data-i="${i}"><svg viewBox="0 0 30 22"><path d="${PADP}"/></svg><span class="bd no">✕</span></div>`).join('');
 $('slots').onclick=e=>{const s=e.target.closest('.slot');if(s&&getPads()[+s.dataset.i])sel=+s.dataset.i};
-const BODY='M200 56 C168 56 148 50 118 44 C84 38 58 56 46 94 C34 134 22 196 24 232 C26 256 46 262 64 250 C86 236 104 218 126 204 C142 194 166 194 200 194 C234 194 258 194 274 204 C296 218 314 236 336 250 C354 262 374 256 376 232 C378 196 366 134 354 94 C342 56 316 38 282 44 C252 50 232 56 200 56Z';
-const bump=(i,x,r,l)=>`<g transform="rotate(${r} ${x+38} 38)"><rect class="p" id="p${i}" x="${x}" y="30" width="76" height="16" rx="8"/><text class="t" x="${x+38}" y="38">${l}</text></g>`;
-const cir=(i,x,y,r,l,fs)=>`<circle class="p" id="p${i}" cx="${x}" cy="${y}" r="${r}"/>`+(l?`<text class="t" x="${x}" y="${y}"${fs?` style="font-size:${fs}px"`:''}>${l}</text>`:'');
-const ell=(i,x,y,rx,ry,l)=>`<ellipse class="p" id="p${i}" cx="${x}" cy="${y}" rx="${rx}" ry="${ry}"/>`+(l?`<text class="t" x="${x}" y="${y}" style="font-size:10px">${l}</text>`:'');
-const rc=(i,x,y,w,h,rx)=>`<rect class="p" id="p${i}" x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}"/>`;
-const stick=(i,k,x,y,r)=>cir(i,x,y,r)+`<circle class="thumb" id="t${k}" data-m="${r/2}" cx="${x}" cy="${y}" r="${r*0.5}"/>`;
-const dpad=(x,y,s)=>rc(12,x-6*s,y-24*s,12*s,20*s,3)+rc(13,x-6*s,y+4*s,12*s,20*s,3)+rc(14,x-24*s,y-6*s,20*s,12*s,3)+rc(15,x+4*s,y-6*s,20*s,12*s,3);
-const face=(x,y,l,d,r)=>cir(3,x,y-d,r,l[3],13)+cir(1,x+d,y,r,l[1],13)+cir(2,x-d,y,r,l[2],13)+cir(0,x,y+d,r,l[0],13);
-function svg(k){
-  const ps=k==='ps',sw=k==='sw';
-  const L=ps?['L1','R1']:sw?['L','R']:['LB','RB'];
-  const F=ps?['✕','○','□','△']:sw?['B','A','Y','X']:['A','B','X','Y'];
-  return `<path class="body" d="${BODY}"/>`+bump(4,78,-9,L[0])+bump(5,246,9,L[1])
-   +`<circle class="ring" cx="140" cy="156" r="31"/>`+dpad(140,156,1.1)
-   +stick(10,0,89,99,26)+stick(11,1,249,156,26)+face(304,101,F,26,12.5)
-   +cir(16,195,101,16,ps?'PS':sw?'⌂':'',10)+(ps||sw?'':'<path class="glyph" d="M189 95 L201 107 M201 95 L189 107"/>')
-   +ell(8,159,101,8,5,sw?'−':'')+ell(9,236,101,8,5,sw?'+':'');
-}
-function setKind(k){
-  cur=k;$('pad').innerHTML=svg(k);done.clear();
-  $('lt6').textContent=k==='ps'?'L2':k==='sw'?'ZL':'LT';$('lt7').textContent=k==='ps'?'R2':k==='sw'?'ZR':'RT';
-  const C=k==='ps'?['#6aa7ff','#ff6b6b','#ff9ad5','#6ee7a0']:k==='sw'?null:['#2fb344','#e03131','#1c8ae6','#f2c200'];
-  if(C)C.forEach((c,i)=>{const e=$('p'+i);e.style.fill=c;const t=e.nextElementSibling;if(t)t.style.fill='#111'});
-}
-function kind(id){id=id.toLowerCase();
-  if(/xbox|x-box|045e|microsoft|xinput/.test(id))return'xb';
-  if(/054c|dualshock|dualsense|playstation|sony/.test(id))return'ps';
-  if(/057e|nintendo|pro controller/.test(id))return'sw';
-  return'gen'}
 function getPads(){try{return[...navigator.getGamepads()]}catch(e){return[]}}
-function updBtns(p){
+function updBtns(st){
   let tot=0,got=0;
-  for(let i=0;i<17;i++){
-    const b=p.buttons[i];if(!b)continue;tot++;
-    if(i===6||i===7){
-      $('f'+i).style.height=(b.value*100)+'%';$('pc'+i).textContent=Math.round(b.value*100)+'%';
-      if(b.value>0.9)done.add(i);
-      const d=done.has(i);$('tr'+i).classList.toggle('done',d);if(d)got++;continue;
-    }
+  for(let i=0;i<18;i++){
+    const hs=st.has[i];
+    if(i===6||i===7){const v=st.b[i];$('f'+i).style.height=(v*100)+'%';$('pc'+i).textContent=Math.round(v*100)+'%';if(hs&&v>.9)done.add(i);const d=done.has(i);$('tr'+i).classList.toggle('done',d);if(hs){tot++;if(d)got++}continue}
     const el=$('p'+i);if(!el)continue;
-    el.classList.toggle('on',b.pressed);
-    if(b.pressed)done.add(i);
+    el.classList.toggle('na',!hs);if(!hs)continue;
+    tot++;const on=st.b[i]>.5;el.classList.toggle('on',on);if(on)done.add(i);
     const d=done.has(i);el.classList.toggle('done',d);if(d)got++;
   }
   $('cnt').textContent=got+'/'+tot+' tested';
@@ -177,14 +297,19 @@ function loop(){
     const p=sel>=0?pads[sel]:null;
     document.querySelectorAll('.slot').forEach((s,i)=>{const on=!!pads[i],b=s.querySelector('.bd');b.className='bd '+(on?'ok':'no');b.textContent=on?'✓':'✕';s.style.opacity=(i===sel||!on)?1:.8});
     $('ctitle').textContent='Controller '+((sel<0?0:sel)+1);
-    if(sel!==lastSel){lastSel=sel;cur='';done.clear()}
+    if(sel!==lastSel){lastSel=sel;cur='';done.clear();wz=null;wizShow()}
     if(p){
       const k=kind(p.id);if(k!==cur)setKind(k);
-      $('status').textContent='(Connected)';$('pid').textContent=p.id;
+      const st=readPad(p);
+      $('status').textContent='(Connected)';
+      $('pid').textContent=NAMES[k]+' · '+p.id;
+      $('hint').textContent=st.mode==='standard'||st.mode==='custom'?'':'Non-standard controller. If buttons look wrong, tap Map controller.';
       $('go').disabled=testing;
-      updBtns(p);
+      if(wz)wizTick(p);
+      updBtns(st);
+      $('tilt').style.transform='rotateX('+(-st.ax[3]*6)+'deg) rotateY('+(st.ax[2]*6)+'deg)';
       for(let i=0;i<2;i++){
-        const x=p.axes[i*2]||0,y=p.axes[i*2+1]||0,t=$('t'+i);
+        const x=st.ax[i*2]||0,y=st.ax[i*2+1]||0,t=$('t'+i);
         drawStick(i,x,y);
         if(t){const m=+t.dataset.m||12;t.setAttribute('transform','translate('+(x*m)+' '+(y*m)+')')}
         if(testing)samples[i].push(Math.hypot(x,y));
@@ -195,7 +320,7 @@ function loop(){
         if(t>=DUR)finish();
       }
     }else{
-      $('status').textContent='(Not connected)';$('pid').textContent='Connect a controller and press any button';
+      $('status').textContent='(Not connected)';$('pid').textContent='Connect a controller and press any button';$('hint').textContent='';
       $('go').disabled=true;drawStick(0,0,0);drawStick(1,0,0);
     }
   }catch(e){$('pid').textContent='Error: '+e.message}
@@ -206,13 +331,17 @@ function rumble(s,w,ms){
   if(!p){$('rmsg').textContent='No controller connected.';return}
   const a=p.vibrationActuator;
   if(!a||!a.playEffect){$('rmsg').textContent='Rumble is not supported by this browser or controller. Try Chrome or Edge.';return}
-  $('rmsg').textContent='';
+  $('rmsg').textContent='';$('tilt').classList.add('rum');setTimeout(()=>$('tilt').classList.remove('rum'),ms);
   a.playEffect('dual-rumble',{startDelay:0,duration:ms,strongMagnitude:s,weakMagnitude:w}).catch(()=>{$('rmsg').textContent='Rumble failed on this controller.'});
 }
+const seq=l=>l.forEach(([t,s,w,ms])=>setTimeout(()=>rumble(s,w,ms),t));
+function heartbeat(){const l=[];for(let i=0;i<5;i++)l.push([i*850,.9,.5,130],[i*850+190,.6,.3,110]);seq(l)}
+function wave(){const l=[];for(let i=0;i<16;i++){const v=Math.sin(i/15*Math.PI);l.push([i*140,v,1-v,140])}seq(l)}
+function sos(){const l=[];let t=0;[1,1,1,3,3,3,1,1,1].forEach(d=>{l.push([t,1,1,d*150]);t+=d*150+160});seq(l)}
 function pulse(){[0,400,800].forEach(t=>setTimeout(()=>rumble(1,1,200),t))}
 $('go').onclick=()=>{samples=[[],[]];$('s0').textContent='';$('s1').textContent='';testing=true;t0=performance.now();$('go').disabled=true;$('go').textContent='Testing…'};
 $('dz').oninput=e=>{$('dzv').textContent=e.target.value+'%'};
-setKind('gen');loop();
+setKind('xb');loop();
 </script>
 </body>
 </html>
