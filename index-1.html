@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ghostick</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{--g:#8dc63f;--gl:#c4ee5f;--line:rgba(255,255,255,.75);--dim:rgba(255,255,255,.62);--warn:#ffb74d;--bad:#ff6b6b;color-scheme:dark}
+*{box-sizing:border-box}
+html{min-height:100%;background:#1c1c1c}
+body{margin:0;min-height:100vh;color:#fff;background:linear-gradient(180deg,#5d5c5d 0,#3d3d3d 35%,#1f1f1f 100%);font:400 15px/1.4 "Segoe UI","Open Sans",system-ui,sans-serif;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px);overflow-wrap:anywhere}
+main{max-width:560px;margin:0 auto;padding:18px 14px 44px;text-align:center}
+.brand{font-size:12px;letter-spacing:4px;color:var(--dim);margin-bottom:10px}
+.slots{display:flex;justify-content:center;gap:14px}
+.slot{position:relative;cursor:pointer;padding:2px}
+.slot svg{width:36px;height:26px;display:block;fill:none;stroke:#fff;stroke-width:1.6;stroke-linejoin:round}
+.bd{position:absolute;left:-4px;bottom:-4px;width:16px;height:16px;border-radius:50%;font-size:10px;line-height:16px;font-weight:700}
+.bd.ok{background:#2fb344}.bd.no{background:#e03131}
+.lbl{font-size:12px;color:var(--dim);margin:6px 0 10px}
+h1{font-size:clamp(26px,8vw,36px);font-weight:300;margin:0}
+.st{font-size:15px;color:var(--dim);font-weight:300}
+.idl{font-size:11px;color:var(--dim);margin:4px 0 12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.padwrap{display:grid;grid-template-columns:36px minmax(0,1fr) 36px;gap:6px;align-items:center}
+.tcol{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px}
+.tbar{position:relative;width:16px;height:130px;border:1.5px solid var(--line);overflow:hidden}
+.tbar i{position:absolute;left:0;right:0;bottom:0;height:0;background:var(--g)}
+.tbar.done{border-color:var(--gl);box-shadow:0 0 8px var(--g)}
+.tcol b{font-weight:400;font-size:11px;color:var(--dim)}
+svg#pad{width:100%;height:auto;display:block}
+.body{fill:#1b1b1b;stroke:#303030;stroke-width:2}
+.p{fill:#7b7e80;stroke:#262626;stroke-width:1.2;transition:filter .12s}
+.p.done{fill:#6c9a2b;stroke:var(--gl);stroke-width:2.5;filter:drop-shadow(0 0 4px var(--g))}
+.p.on{stroke:#fff;filter:brightness(1.6) drop-shadow(0 0 6px #fff)}
+.p.done+.t{fill:#0f2306}
+.thumb{fill:#3b3d3f;stroke:#1c1c1c;stroke-width:1}
+.ring{fill:none;stroke:#3a3a3a;stroke-width:1.5}
+.glyph{stroke:#fff;stroke-width:3;stroke-linecap:round;fill:none;pointer-events:none}
+.t{font-size:12px;font-weight:600;fill:#ececec;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.cnt{font-size:13px;color:var(--dim);margin:10px 0}
+.row{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+button{font:inherit;font-weight:600;font-size:14px;color:#fff;border:1px solid var(--line);background:rgba(255,255,255,.08);border-radius:6px;padding:9px 14px;cursor:pointer;max-width:100%}
+button.go{background:linear-gradient(180deg,#b9de6c 0,#8dc63f 50%,#74ad25 51%,#8dc63f 100%);border-color:#4f8a12;text-shadow:0 1px 0 rgba(0,0,0,.3)}
+button:disabled{opacity:.4;cursor:default}
+#rmsg{font-size:12px;color:var(--dim);margin-top:8px;min-height:1em}
+.sticks{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-top:22px}
+.sp h3{font-size:14px;font-weight:400;margin:0 0 2px}
+.xy{font-size:12px;color:var(--dim);margin-bottom:8px}
+.xy b{font-weight:400;color:#fff;display:inline-block;min-width:3.2ch}
+canvas{width:100%;max-width:150px;aspect-ratio:1;display:block;margin:0 auto}
+.res{font-size:12px;font-weight:600;margin-top:8px;min-height:2.8em;white-space:pre-line;line-height:1.35}
+.ctl{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center;margin-top:12px}
+label{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--dim);flex:1 1 180px;min-width:0}
+input[type=range]{flex:1;min-width:0;accent-color:var(--g)}
+.bar{height:5px;background:rgba(255,255,255,.12);margin-top:12px}
+.bar i{display:block;height:100%;width:0;background:var(--g)}
+.tip{font-size:12px;color:var(--dim);margin:14px 0 0}
+</style>
+</head>
+<body>
+<main>
+<div class="brand">GHOSTICK</div>
+<div class="slots" id="slots"></div>
+<div class="lbl">Connected Controllers</div>
+<h1 id="ctitle">Controller 1</h1>
+<div class="st" id="status">(Not connected)</div>
+<div class="idl" id="pid">Connect a controller and press any button</div>
+
+<div class="padwrap">
+<div class="tcol"><span id="lt6">LT</span><div class="tbar" id="tr6"><i id="f6"></i></div><b id="pc6">0%</b></div>
+<svg id="pad" viewBox="0 0 400 270" aria-label="Virtual controller"></svg>
+<div class="tcol"><span id="lt7">RT</span><div class="tbar" id="tr7"><i id="f7"></i></div><b id="pc7">0%</b></div>
+</div>
+<div class="cnt" id="cnt">0/17 tested</div>
+<div class="row">
+<button onclick="rumble(1,0,600)">Strong rumble</button>
+<button onclick="rumble(0,1,600)">Weak rumble</button>
+<button onclick="rumble(1,1,600)">Both</button>
+<button onclick="pulse()">Pulse</button>
+</div>
+<div id="rmsg"></div>
+
+<div class="sticks">
+<div class="sp"><h3>Left Thumbstick</h3><div class="xy">X: <b id="x0">0%</b> Y: <b id="y0">0%</b></div><canvas id="c0" width="300" height="300"></canvas><div class="res" id="s0"></div></div>
+<div class="sp"><h3>Right Thumbstick</h3><div class="xy">X: <b id="x1">0%</b> Y: <b id="y1">0%</b></div><canvas id="c1" width="300" height="300"></canvas><div class="res" id="s1"></div></div>
+</div>
+<div class="ctl">
+<button class="go" id="go" disabled>Start 5s drift test</button>
+<label>Deadzone <input type="range" id="dz" min="0" max="30" value="10"><span id="dzv">10%</span></label>
+</div>
+<div class="bar"><i id="prog"></i></div>
+<p class="tip">Leave both sticks untouched during the test. The dashed ring is your deadzone. Under 3% is clean, 3–8% is minor drift, above that is drifting.</p>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const DUR=5000,done=new Set();
+let sel=-1,lastSel=-2,testing=false,t0=0,samples=[[],[]],cur='';
+const PADP='M7 3h14c3 0 5 3 6 8l1 5c.3 2-1 3-3 3-1.6 0-2.6-1-3.6-2.5L17 14H11l-1.4 1.5C8.6 17 7.6 18 6 18c-2 0-3.3-1-3-3l1-4C5 6 6 3 7 3z';
+$('slots').innerHTML=[0,1,2,3].map(i=>`<div class="slot" data-i="${i}"><svg viewBox="0 0 30 22"><path d="${PADP}"/></svg><span class="bd no">✕</span></div>`).join('');
+$('slots').onclick=e=>{const s=e.target.closest('.slot');if(s&&getPads()[+s.dataset.i])sel=+s.dataset.i};
+const BODY='M200 56 C168 56 148 50 118 44 C84 38 58 56 46 94 C34 134 22 196 24 232 C26 256 46 262 64 250 C86 236 104 218 126 204 C142 194 166 194 200 194 C234 194 258 194 274 204 C296 218 314 236 336 250 C354 262 374 256 376 232 C378 196 366 134 354 94 C342 56 316 38 282 44 C252 50 232 56 200 56Z';
+const bump=(i,x,r,l)=>`<g transform="rotate(${r} ${x+38} 38)"><rect class="p" id="p${i}" x="${x}" y="30" width="76" height="16" rx="8"/><text class="t" x="${x+38}" y="38">${l}</text></g>`;
+const cir=(i,x,y,r,l,fs)=>`<circle class="p" id="p${i}" cx="${x}" cy="${y}" r="${r}"/>`+(l?`<text class="t" x="${x}" y="${y}"${fs?` style="font-size:${fs}px"`:''}>${l}</text>`:'');
+const ell=(i,x,y,rx,ry,l)=>`<ellipse class="p" id="p${i}" cx="${x}" cy="${y}" rx="${rx}" ry="${ry}"/>`+(l?`<text class="t" x="${x}" y="${y}" style="font-size:10px">${l}</text>`:'');
+const rc=(i,x,y,w,h,rx)=>`<rect class="p" id="p${i}" x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}"/>`;
+const stick=(i,k,x,y,r)=>cir(i,x,y,r)+`<circle class="thumb" id="t${k}" data-m="${r/2}" cx="${x}" cy="${y}" r="${r*0.5}"/>`;
+const dpad=(x,y,s)=>rc(12,x-6*s,y-24*s,12*s,20*s,3)+rc(13,x-6*s,y+4*s,12*s,20*s,3)+rc(14,x-24*s,y-6*s,20*s,12*s,3)+rc(15,x+4*s,y-6*s,20*s,12*s,3);
+const face=(x,y,l,d,r)=>cir(3,x,y-d,r,l[3],13)+cir(1,x+d,y,r,l[1],13)+cir(2,x-d,y,r,l[2],13)+cir(0,x,y+d,r,l[0],13);
+function svg(k){
+  const ps=k==='ps',sw=k==='sw';
+  const L=ps?['L1','R1']:sw?['L','R']:['LB','RB'];
+  const F=ps?['✕','○','□','△']:sw?['B','A','Y','X']:['A','B','X','Y'];
+  return `<path class="body" d="${BODY}"/>`+bump(4,78,-9,L[0])+bump(5,246,9,L[1])
+   +`<circle class="ring" cx="140" cy="156" r="31"/>`+dpad(140,156,1.1)
+   +stick(10,0,89,99,26)+stick(11,1,249,156,26)+face(304,101,F,26,12.5)
+   +cir(16,195,101,16,ps?'PS':sw?'⌂':'',10)+(ps||sw?'':'<path class="glyph" d="M189 95 L201 107 M201 95 L189 107"/>')
+   +ell(8,159,101,8,5,sw?'−':'')+ell(9,236,101,8,5,sw?'+':'');
+}
+function setKind(k){
+  cur=k;$('pad').innerHTML=svg(k);done.clear();
+  $('lt6').textContent=k==='ps'?'L2':k==='sw'?'ZL':'LT';$('lt7').textContent=k==='ps'?'R2':k==='sw'?'ZR':'RT';
+  const C=k==='ps'?['#6aa7ff','#ff6b6b','#ff9ad5','#6ee7a0']:k==='sw'?null:['#2fb344','#e03131','#1c8ae6','#f2c200'];
+  if(C)C.forEach((c,i)=>{const e=$('p'+i);e.style.fill=c;const t=e.nextElementSibling;if(t)t.style.fill='#111'});
+}
+function kind(id){id=id.toLowerCase();
+  if(/xbox|x-box|045e|microsoft|xinput/.test(id))return'xb';
+  if(/054c|dualshock|dualsense|playstation|sony/.test(id))return'ps';
+  if(/057e|nintendo|pro controller/.test(id))return'sw';
+  return'gen'}
+function getPads(){try{return[...navigator.getGamepads()]}catch(e){return[]}}
+function updBtns(p){
+  let tot=0,got=0;
+  for(let i=0;i<17;i++){
+    const b=p.buttons[i];if(!b)continue;tot++;
+    if(i===6||i===7){
+      $('f'+i).style.height=(b.value*100)+'%';$('pc'+i).textContent=Math.round(b.value*100)+'%';
+      if(b.value>0.9)done.add(i);
+      const d=done.has(i);$('tr'+i).classList.toggle('done',d);if(d)got++;continue;
+    }
+    const el=$('p'+i);if(!el)continue;
+    el.classList.toggle('on',b.pressed);
+    if(b.pressed)done.add(i);
+    const d=done.has(i);el.classList.toggle('done',d);if(d)got++;
+  }
+  $('cnt').textContent=got+'/'+tot+' tested';
+}
+function drawStick(i,x,y){
+  const c=$('c'+i),g=c.getContext('2d'),w=c.width,r=w/2-8,dz=$('dz').value/100;
+  g.clearRect(0,0,w,w);
+  g.strokeStyle='rgba(255,255,255,.8)';g.lineWidth=2;
+  g.beginPath();g.arc(w/2,w/2,r,0,7);g.stroke();
+  g.lineWidth=1;g.strokeStyle='rgba(255,255,255,.35)';
+  g.beginPath();g.moveTo(w/2,8);g.lineTo(w/2,w-8);g.moveTo(8,w/2);g.lineTo(w-8,w/2);g.stroke();
+  g.setLineDash([6,5]);g.strokeStyle='#ffb74d';g.lineWidth=2;
+  g.beginPath();g.arc(w/2,w/2,Math.max(dz*r,2),0,7);g.stroke();g.setLineDash([]);
+  g.fillStyle=Math.hypot(x,y)>dz?'#ff6b6b':'#9bc848';
+  g.beginPath();g.arc(w/2+x*r,w/2+y*r,8,0,7);g.fill();
+  $('x'+i).textContent=Math.round(x*100)+'%';$('y'+i).textContent=Math.round(y*100)+'%';
+}
+function finish(){
+  testing=false;$('go').disabled=false;$('go').textContent='Run again';$('prog').style.width='0';
+  const dz=$('dz').value/100;
+  for(let i=0;i<2;i++){
+    const s=samples[i];if(!s.length)continue;
+    const mean=s.reduce((a,b)=>a+b,0)/s.length,max=Math.max(...s);
+    let v,col;
+    if(mean<0.03){v='Clean';col='#9bc848'}else if(mean<0.08){v='Minor drift';col='#ffb74d'}else{v='Drifting';col='#ff6b6b'}
+    const el=$('s'+i);el.style.color=col;
+    el.textContent=v+'\navg '+(mean*100).toFixed(1)+'% · peak '+(max*100).toFixed(1)+'%'+(max>dz?'\nbeyond deadzone':'');
+  }
+}
+function loop(){
+  try{
+    const pads=getPads();
+    if(!pads[sel])sel=pads.findIndex(Boolean);
+    const p=sel>=0?pads[sel]:null;
+    document.querySelectorAll('.slot').forEach((s,i)=>{const on=!!pads[i],b=s.querySelector('.bd');b.className='bd '+(on?'ok':'no');b.textContent=on?'✓':'✕';s.style.opacity=(i===sel||!on)?1:.8});
+    $('ctitle').textContent='Controller '+((sel<0?0:sel)+1);
+    if(sel!==lastSel){lastSel=sel;cur='';done.clear()}
+    if(p){
+      const k=kind(p.id);if(k!==cur)setKind(k);
+      $('status').textContent='(Connected)';$('pid').textContent=p.id;
+      $('go').disabled=testing;
+      updBtns(p);
+      for(let i=0;i<2;i++){
+        const x=p.axes[i*2]||0,y=p.axes[i*2+1]||0,t=$('t'+i);
+        drawStick(i,x,y);
+        if(t){const m=+t.dataset.m||12;t.setAttribute('transform','translate('+(x*m)+' '+(y*m)+')')}
+        if(testing)samples[i].push(Math.hypot(x,y));
+      }
+      if(testing){
+        const t=performance.now()-t0;
+        $('prog').style.width=Math.min(100,t/DUR*100)+'%';
+        if(t>=DUR)finish();
+      }
+    }else{
+      $('status').textContent='(Not connected)';$('pid').textContent='Connect a controller and press any button';
+      $('go').disabled=true;drawStick(0,0,0);drawStick(1,0,0);
+    }
+  }catch(e){$('pid').textContent='Error: '+e.message}
+  requestAnimationFrame(loop);
+}
+function rumble(s,w,ms){
+  const p=getPads()[sel];
+  if(!p){$('rmsg').textContent='No controller connected.';return}
+  const a=p.vibrationActuator;
+  if(!a||!a.playEffect){$('rmsg').textContent='Rumble is not supported by this browser or controller. Try Chrome or Edge.';return}
+  $('rmsg').textContent='';
+  a.playEffect('dual-rumble',{startDelay:0,duration:ms,strongMagnitude:s,weakMagnitude:w}).catch(()=>{$('rmsg').textContent='Rumble failed on this controller.'});
+}
+function pulse(){[0,400,800].forEach(t=>setTimeout(()=>rumble(1,1,200),t))}
+$('go').onclick=()=>{samples=[[],[]];$('s0').textContent='';$('s1').textContent='';testing=true;t0=performance.now();$('go').disabled=true;$('go').textContent='Testing…'};
+$('dz').oninput=e=>{$('dzv').textContent=e.target.value+'%'};
+setKind('gen');loop();
+</script>
+</body>
+</html>
